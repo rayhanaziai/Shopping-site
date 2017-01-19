@@ -66,25 +66,22 @@ def show_shopping_cart():
         melon_objects = []
         total_cost = 0
 
-        print my_cart
 
-        for melon_id, quantity in my_cart.items():
-            print melon_id
+        for melon_id in my_cart:
             melon_object = melons.get_by_id(melon_id)
-            print melon_object
-            melon_total = quantity * melon_object.price
+            melon_total = my_cart[melon_id] * melon_object.price
             total_cost += melon_total
             melon_object.quantity = my_cart[melon_id]
             melon_object.cost = melon_total
             melon_objects.append(melon_object)
 
-        return render_template("cart.html", total_cost=total_cost, melon_objects=melon_objects)
+        return render_template("cart.html", 
+                    total_cost=total_cost, 
+                    melon_objects=melon_objects)
 
     else:
         flash("Your cart is empty")
-        return redirect("cart.html")
-
-    # TODO: Display the contents of the shopping cart.
+        return redirect('/melons')    # TODO: Display the contents of the shopping cart.
 
     # The logic here will be something like:
     #
@@ -112,9 +109,7 @@ def add_to_cart(melon_id):
     cart'."""
 
 
-    if "cart" in session:
-        pass
-    else:
+    if "cart" not in session:
         session["cart"] = {}
 
     if melon_id in session["cart"]:
